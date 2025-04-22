@@ -18,14 +18,17 @@ public struct DateGrid<DateView>: View where DateView: View {
         interval: DateInterval,
         selectedMonth: Binding<Date>,
         mode: CalendarMode,
+        scrollToToday: Bool = false,
         @ViewBuilder content: @escaping (DateGridDate) -> DateView
     ) {
         self.viewModel = .init(interval: interval, mode: mode)
         self._selectedMonth = selectedMonth
         self.content = content
+        self.scrollToToday = scrollToToday
     }
     
     //TODO: make Date generator class
+    private var scrollToToday: Bool
     private let viewModel: DateGridViewModel
     private let content: (DateGridDate) -> DateView
     @Binding var selectedMonth: Date
@@ -38,6 +41,16 @@ public struct DateGrid<DateView>: View where DateView: View {
         }
         .frame(height: viewModel.mode.estimateHeight, alignment: .center)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .onAppear {
+            if scrollToToday {
+                let today = Date()
+                if let weekStart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start {
+                    DispatchQueue.main.async {
+                        selectedMonth = weekStart
+                    }
+                }
+            }
+        }
     }
     
     //MARK: constant and supportive methods
@@ -55,11 +68,12 @@ struct CalendarView_Previews: PreviewProvider {
             DateGrid(
                 interval:
                         .init(
-                            start: Date.getDate(from: "2024 01 01")!,
+                            start: Date.getDate(from: "2025 04 01")!,
                             end: Date.getDate(from: "2025 12 11")!
                         ),
                 selectedMonth: $selectedMonthDate,
-                mode: .week(estimateHeight: 400)
+                mode: .week(estimateHeight: 400),
+                scrollToToday: true
             ) { dateGridDate in
                
 //                NormalDayCell(date: dateGridDate.date)
@@ -128,10 +142,10 @@ struct MonthsOrWeeks<DateView>: View where DateView: View {
                         }
                     }
                 }
-                .tag(monthOrWeek)
+                
                 //Tab view frame alignment to .Top didn't work dtz y
                 Spacer()
-            }
+            }.tag(monthOrWeek)
         }
     }
     
