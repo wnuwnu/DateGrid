@@ -12,9 +12,12 @@ class DateGridViewModel: ObservableObject {
     init(interval: DateInterval, mode: CalendarMode) {
         self.interval = interval
         self.mode = mode
+        var cal = Calendar(identifier: .gregorian)
+        cal.firstWeekday = 2
+        self.calendar = cal
     }
     
-    @Environment(\.calendar) var calendar
+    let calendar: Calendar
     let interval: DateInterval
     var mode: CalendarMode
     

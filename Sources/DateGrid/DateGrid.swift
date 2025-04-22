@@ -50,23 +50,58 @@ struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Text(selectedMonthDate.description)
-            WeekDaySymbols()
+            
             
             DateGrid(
                 interval:
                         .init(
-                            start: Date.getDate(from: "2020 01 11")!,
-                            end: Date.getDate(from: "2020 12 11")!
+                            start: Date.getDate(from: "2024 01 01")!,
+                            end: Date.getDate(from: "2025 12 11")!
                         ),
                 selectedMonth: $selectedMonthDate,
-                mode: .month(estimateHeight: 400)
+                mode: .week(estimateHeight: 400)
             ) { dateGridDate in
+               
+//                NormalDayCell(date: dateGridDate.date)
                 
-                NormalDayCell(date: dateGridDate.date)
+                VStack{
+                    
+                    if #available(iOS 15.0, *) {
+                        
+
+                        Text(getWeekdayString(from: dateGridDate.date))
+                        //                        .font(Font.sfProText.regular.font(size: 14))
+                            .frame(width: 12, height: 17)
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                    
+                    Text(getDayString(from: dateGridDate.date))
+//                        .font(Font.sfProText.regular.font(size: 14))
+                        .frame(width: 24, height: 16)
+                    
+                }
             }
         }
         
     }
+}
+
+func getWeekdayString(from date: Date) -> String {
+    getCommonDateFormatter(dateStyle: "E").string(from: date)
+}
+
+func getDayString(from date: Date) -> String {
+    getCommonDateFormatter(dateStyle: "dd").string(from: date)
+}
+
+func getCommonDateFormatter(dateStyle:String = "yyyy-MM-dd") -> DateFormatter {
+    let dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "ko_KR")
+    dateFormatter.dateFormat = dateStyle
+    dateFormatter.timeZone = TimeZone(identifier: "KST")
+    dateFormatter.calendar = Calendar(identifier: .gregorian)
+    return dateFormatter
 }
 
 struct MonthsOrWeeks<DateView>: View where DateView: View {
