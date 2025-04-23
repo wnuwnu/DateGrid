@@ -59,12 +59,20 @@ class DateGridViewModel: ObservableObject {
     }
     
     //FIXME: change method signature to match above
+//    private func days(forWeek: Date) -> [Date] {
+//        guard
+//            let weekInterval = calendar.dateInterval(of: .weekOfMonth, for: forWeek)
+//        else { return [] }
+//        
+//        let days = calendar.generateDates( inside: DateInterval(start: weekInterval.start, end: weekInterval.end), matching: DateComponents(hour: 0, minute: 0, second: 0))
+//        return days
+//    }
+    
     private func days(forWeek: Date) -> [Date] {
-        guard
-            let weekInterval = calendar.dateInterval(of: .weekOfMonth, for: forWeek)
-        else { return [] }
-        
-        let days = calendar.generateDates( inside: DateInterval(start: weekInterval.start, end: weekInterval.end), matching: DateComponents(hour: 0, minute: 0, second: 0))
-        return days
+        // 주의 시작일부터 7일을 연속적으로 생성
+        (0..<7).compactMap { offset in
+            calendar.date(byAdding: .day, value: offset, to: forWeek)
+        }
     }
+
 }

@@ -42,11 +42,11 @@ public struct DateGrid<DateView>: View where DateView: View {
                         ForEach(viewModel.days(for: monthOrWeek), id: \.self) { date in
                             let dateGridDate = DateGridDate(date: date, currentMonth: monthOrWeek)
                             
-                            if viewModel.calendar.isDate(date, equalTo: monthOrWeek, toGranularity: .month) {
+//                            if viewModel.calendar.isDate(date, equalTo: monthOrWeek, toGranularity: .month) {
                                 content(dateGridDate)
-                            } else {
-                                content(dateGridDate).hidden()
-                            }
+//                            } else {
+//                                content(dateGridDate).hidden()
+//                            }
                         }
                     }
                     Spacer()
@@ -107,8 +107,8 @@ struct CalendarView_Previews: PreviewProvider {
             DateGrid(
                 interval:
                         .init(
-                            start: Date.getDate(from: "2025 04 01")!,
-                            end: Date.getDate(from: "2025 12 11")!
+                            start: Date.getDate(from: "2025 03 01")!,
+                            end: Date.getDate(from: "2025 05 31")!
                         ),
                 selectedMonth: $selectedMonthDate,
                 mode: .week(estimateHeight: 400),
