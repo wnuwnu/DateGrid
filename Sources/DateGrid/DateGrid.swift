@@ -45,14 +45,13 @@ public struct DateGrid<DateView>: View where DateView: View {
                             let monthInterval = viewModel.calendar.dateInterval(of: .month, for: monthOrWeek)!
                             let startOfGrid = viewModel.calendar.dateInterval(of: .weekOfMonth, for: monthInterval.start)!.start
                             let endOfGrid = viewModel.calendar.dateInterval(of: .weekOfMonth, for: monthInterval.end)!.end
-                            
+
                             if date >= startOfGrid && date < endOfGrid && date >= viewModel.interval.start && date <= viewModel.interval.end {
                                 content(dateGridDate)
-                                    
                             } else {
                                 content(dateGridDate).hidden()
                             }
-                            
+
                         }
                     }
                     Spacer()
