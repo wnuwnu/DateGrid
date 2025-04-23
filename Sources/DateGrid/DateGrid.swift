@@ -41,7 +41,7 @@ public struct DateGrid<DateView>: View where DateView: View {
         }
         .frame(height: viewModel.mode.estimateHeight, alignment: .center)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-<<<<<<< HEAD
+        
         .onAppear {
             if scrollToToday {
                 let today = Date()
@@ -49,19 +49,12 @@ public struct DateGrid<DateView>: View where DateView: View {
                     DispatchQueue.main.async {
                         selectedMonth = weekStart
                     }
-=======
-        .onAppear{
-            if scrollToToday {
-                let today = Date()
-                if let weekStart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start {
-                    selectedMonth = weekStart
->>>>>>> f651ab30e590251a8da38f0a7436228fe2e44bf4
+                    
+                    
                 }
             }
         }
     }
-    
-    //MARK: constant and supportive methods
 }
 
 struct CalendarView_Previews: PreviewProvider {
