@@ -42,11 +42,12 @@ public struct DateGrid<DateView>: View where DateView: View {
                         ForEach(viewModel.days(for: monthOrWeek), id: \.self) { date in
                             let dateGridDate = DateGridDate(date: date, currentMonth: monthOrWeek)
                             
-//                            if viewModel.calendar.isDate(date, equalTo: monthOrWeek, toGranularity: .month) {
+                            if viewModel.calendar.isDate(date, equalTo: monthOrWeek, toGranularity: .month) &&
+                                date >= viewModel.interval.start && date <= viewModel.interval.end {
                                 content(dateGridDate)
-//                            } else {
-//                                content(dateGridDate).hidden()
-//                            }
+                            } else {
+                                content(dateGridDate).hidden()
+                            }
                         }
                     }
                     Spacer()
