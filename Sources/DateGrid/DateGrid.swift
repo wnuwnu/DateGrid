@@ -36,12 +36,25 @@ public struct DateGrid<DateView>: View where DateView: View {
     public var body: some View {
         
         TabView(selection: $selectedMonth) {
-            
-            MonthsOrWeeks(viewModel: viewModel, content: content)
+            ForEach(viewModel.monthsOrWeeks, id: \.self) { monthOrWeek in
+                VStack {
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 0) {
+                        ForEach(viewModel.days(for: monthOrWeek), id: \.self) { date in
+                            let dateGridDate = DateGridDate(date: date, currentMonth: monthOrWeek)
+                            if viewModel.calendar.isDate(date, equalTo: monthOrWeek, toGranularity: .month) {
+                                content(dateGridDate)
+                            } else {
+                                content(dateGridDate).hidden()
+                            }
+                        }
+                    }
+                    Spacer()
+                }
+                .tag(monthOrWeek.startOfWeek(using: viewModel.calendar)) // 중요: 바인딩용 태그
+            }
         }
-        .frame(height: viewModel.mode.estimateHeight, alignment: .center)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        
+        .frame(height: viewModel.mode.estimateHeight)
         .onAppear {
             if scrollToToday {
                 let today = Date()
@@ -49,11 +62,31 @@ public struct DateGrid<DateView>: View where DateView: View {
                     DispatchQueue.main.async {
                         selectedMonth = weekStart
                     }
-                    
-                    
                 }
             }
         }
+
+
+        
+//        TabView(selection: $selectedMonth) {
+//            
+//            MonthsOrWeeks(viewModel: viewModel, content: content)
+//        }
+//        .frame(height: viewModel.mode.estimateHeight, alignment: .center)
+//        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+//        
+//        .onAppear {
+//            if scrollToToday {
+//                let today = Date()
+//                if let weekStart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start {
+//                    DispatchQueue.main.async {
+//                        selectedMonth = weekStart
+//                    }
+//                    
+//                    
+//                }
+//            }
+//        }
     }
 }
 
@@ -152,4 +185,11 @@ struct MonthsOrWeeks<DateView>: View where DateView: View {
     
     //MARK: constant and supportive methods
     private let numberOfDaysInAWeek = 7
+}
+
+
+extension Date {
+    func startOfWeek(using calendar: Calendar = .current) -> Date {
+        calendar.dateInterval(of: .weekOfYear, for: self)?.start ?? self
+    }
 }
