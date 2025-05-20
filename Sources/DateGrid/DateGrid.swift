@@ -9,6 +9,8 @@ import SwiftUI
 
 public struct DateGrid<DateView>: View where DateView: View {
     
+    @Binding var scrollToTodayTrigger: Bool
+    
     /// DateStack view
     /// - Parameters:
     ///   - interval:
@@ -19,12 +21,14 @@ public struct DateGrid<DateView>: View where DateView: View {
         selectedMonth: Binding<Date>,
         mode: CalendarMode,
         scrollToToday: Bool = false,
+        scrollToTodayTrigger: Binding<Bool> = .constant(false),
         @ViewBuilder content: @escaping (DateGridDate) -> DateView
     ) {
         self.viewModel = .init(interval: interval, mode: mode)
         self._selectedMonth = selectedMonth
         self.content = content
         self.scrollToToday = scrollToToday
+        self._scrollToTodayTrigger = scrollToTodayTrigger
     }
     
     //TODO: make Date generator class
@@ -61,6 +65,16 @@ public struct DateGrid<DateView>: View where DateView: View {
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .frame(height: viewModel.mode.estimateHeight)
+        .onChange(of: scrollToToday){ newValue in
+            if newValue {
+                let today = Date()
+                if let weekstart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start{
+                    let normalized = weekstart.startOfWeek(using: viewModel.calendar)
+                    selectedMonth = normalized
+                }
+            }
+            
+        }
         .onAppear {
             if scrollToToday {
                 let today = Date()
