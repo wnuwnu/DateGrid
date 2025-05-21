@@ -74,6 +74,9 @@ public struct DateGrid<DateView>: View where DateView: View {
                         selectedMonth = normalized
                     }
                 }
+                DispatchQueue.main.async {
+                    scrollToTodayTrigger = false
+                }
             }
             
         }
