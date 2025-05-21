@@ -68,8 +68,9 @@ public struct DateGrid<DateView>: View where DateView: View {
         .onChange(of: scrollToTodayTrigger){ newValue in
             if newValue {
                 let today = Date()
-                if let weekstart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start{
-                    let normalized = weekstart.startOfWeek(using: viewModel.calendar)
+                if let weekStart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start {
+                    let normalized = weekStart.startOfWeek(using: viewModel.calendar)
+                    print(">>> Setting selectedMonth to: \(normalized)")
                     DispatchQueue.main.async {
                         selectedMonth = normalized
                     }
