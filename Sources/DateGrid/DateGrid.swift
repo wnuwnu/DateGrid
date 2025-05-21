@@ -70,7 +70,9 @@ public struct DateGrid<DateView>: View where DateView: View {
                 let today = Date()
                 if let weekstart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start{
                     let normalized = weekstart.startOfWeek(using: viewModel.calendar)
-                    selectedMonth = normalized
+                    DispatchQueue.main.async {
+                        selectedMonth = normalized
+                    }
                 }
             }
             
