@@ -66,6 +66,7 @@ public struct DateGrid<DateView>: View where DateView: View {
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .frame(height: viewModel.mode.estimateHeight)
         .onChange(of: scrollToTodayTrigger){ newValue in
+            print("onChange fired, newValue: \(newValue)")
             if newValue {
                 let today = Date()
                 if let weekStart = viewModel.calendar.dateInterval(of: .weekOfYear, for: today)?.start {
